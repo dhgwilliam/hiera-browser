@@ -1,6 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    awesome_print (1.2.0)
     coderay (1.1.0)
     hiera (1.3.2)
       json_pure
@@ -13,13 +14,31 @@ GEM
     pry-doc (0.4.5)
       pry (>= 0.9)
       yard (>= 0.8)
+    rack (1.5.2)
+    rack-protection (1.5.3)
+      rack
+    shotgun (0.9)
+      rack (>= 1.0)
+    sinatra (1.4.5)
+      rack (~> 1.4)
+      rack-protection (~> 1.4)
+      tilt (~> 1.3, >= 1.3.4)
+    slim (2.0.2)
+      temple (~> 0.6.6)
+      tilt (>= 1.3.3, < 2.1)
     slop (3.4.7)
+    temple (0.6.7)
+    tilt (1.4.1)
     yard (0.8.7.4)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  awesome_print (= 1.2.0)
   hiera (= 1.3.2)
   pry (= 0.9.12.6)
   pry-doc
+  shotgun
+  sinatra
+  slim

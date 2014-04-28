@@ -1,0 +1,9 @@
+- @values.each do |key, value|
+  - $stdout = StringIO.new
+  = value.keys.pop
+  | :
+  - ap value.values.pop, :html => true
+  == $stdout.string
+  - $stdout = STDOUT
+  br
+  hr
