@@ -9,8 +9,9 @@ class DataDir
   end
 
   def yaml_files
-    dir = Dir.new(@path)
-    dir.select{|filename| filename.match(/^[^\.]\w+\.yaml/)}
+    Dir.chdir(@path) do
+      Dir.glob('**/*.yaml')
+    end
   end
 
   def datafiles
