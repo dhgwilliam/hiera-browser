@@ -24,4 +24,4 @@ bundle install
 bundle exec shotgun -Ilib lib/config.ru -o 0.0.0.0
 ```
 
-And then in a broswer, open http://<url>:9393
+And then in a broswer, open `http://<url>:9393`
