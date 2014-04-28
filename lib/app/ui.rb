@@ -3,6 +3,8 @@ require 'hiera_browser'
 require 'slim'
 require 'ap'
 
+enable :sessions
+
 get '/' do
   redirect('/nodes')
 end
@@ -13,6 +15,17 @@ get '/nodes' do
 end
 
 get '/node/:node' do
-  @values = Node.new(:certname => params[:node]).hiera_values_override
+  keys = session[:keys] || []
+  @values = Node.new(:certname => params[:node]).hiera_values(:additive_keys => keys).sort_by{|k,v|v.keys.pop}
   slim :node
+end
+
+get '/add/additive/:key' do
+  session[:keys] << params[:key]
+  redirect back
+end
+
+get '/remove/additive/:key' do
+  session[:keys].reject!{|key| key == params[:key]}
+  redirect back
 end

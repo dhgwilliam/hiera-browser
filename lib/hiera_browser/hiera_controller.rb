@@ -1,10 +1,11 @@
 require 'yaml'
 
 class HieraController
+  @@hiera_yaml = ENV['HIERA_YAML'] || './hiera.yaml'
   attr_reader :hiera_yaml
 
   def initialize(args={})
-    @hiera_yaml = args[:hiera_yaml] || './hiera.yaml'
+    @hiera_yaml = args[:hiera_yaml] || @@hiera_yaml
     @hiera = hiera(:config => @hiera_yaml)
   end
 
@@ -31,13 +32,38 @@ class HieraController
   end
 
   def lookup(args)
-    Hash[*[args[:key],hiera.lookup(args[:key], nil, args[:scope])]]
+    key = args[:key]
+    scope = args[:scope]
+    resolution_type = args[:resolution_type] || :priority
+    Hash[*[key,hiera.lookup(key, nil, scope, nil, resolution_type)]]
   end
 
-  def get_all_override(args)
-    values = keys.map{|k|
-      [k, lookup(:key => k, :scope => args[:scope])]}
-    Hash[*values.flatten]
+  def get_all(args)
+    scope = args[:scope]
+    values = keys.inject({}){|a, k|
+      a.merge({k => lookup(:key => k, :scope => scope)}) }
+    if args[:additive_keys]
+      additive_values = args[:additive_keys].inject({}){|a,k|
+        a.merge({k => lookup_additive(:key => k, :scope => scope)}) }
+      values = values.delete_if {|k,v| additive_values.has_key?(k)}.merge!(additive_values)
+    end
+    values
+  end
+
+  def lookup_additive(args)
+    key = args[:key]
+    scope = args[:scope]
+    value = lookup(:key => key, :scope => scope)
+    lookup_type = 
+      case value.values.pop
+      when Hash
+        puts "hash"
+        :hash
+      else
+        puts "array"
+        :array
+      end
+    lookup(:key => key, :scope => scope, :resolution_type => lookup_type)
   end
 end
 

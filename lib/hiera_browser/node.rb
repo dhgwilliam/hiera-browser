@@ -22,8 +22,9 @@ class Node
     YAML.load_file(File.join(@@node_dir,"#{@certname}.yaml")).facts.values
   end
 
-  def hiera_values_override
-    @hiera.get_all_override(:scope => facts_yaml)
+  def hiera_values(args={})
+    additive_keys = args[:additive_keys] || []
+    @hiera.get_all(:scope => facts_yaml, :additive_keys => additive_keys)
   end
 
   def self.list

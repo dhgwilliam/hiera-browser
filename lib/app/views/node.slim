@@ -1,6 +1,11 @@
 - @values.each do |key, value|
   - $stdout = StringIO.new
-  = value.keys.pop
+  - key = value.keys.pop
+  - if session[:keys] && session[:keys].include?(key)
+    a href="/remove/additive/#{key}" => key
+    | (additive)
+  - else
+    a href="/add/additive/#{key}" = key
   | :
   - ap value.values.pop, :html => true
   == $stdout.string
