@@ -1,0 +1,6 @@
+---
+vms:
+- name: master
+  box: puppetlabs/centos-6.5-64-nocm
+  roles:
+  - pe-puppet-master
