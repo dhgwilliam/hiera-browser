@@ -57,10 +57,8 @@ class HieraController
     lookup_type = 
       case value.values.pop
       when Hash
-        puts "hash"
         :hash
       else
-        puts "array"
         :array
       end
     lookup(:key => key, :scope => scope, :resolution_type => lookup_type)
