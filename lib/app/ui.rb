@@ -21,6 +21,7 @@ get '/node/:node' do
 end
 
 get '/add/additive/:key' do
+  session[:keys] = Array.new unless session[:keys]
   session[:keys] << params[:key]
   redirect back
 end

@@ -28,8 +28,9 @@ class Node
   end
 
   def self.list
-    files = Dir.new(@@node_dir).select{|f|
-      f.match(/^[^\.]\w+\.yaml/)}
+    files = Dir.chdir(@@node_dir) do
+      Dir.glob('**/*.yaml')
+    end
     files.map{|f| f.split('.yaml')}.flatten
   end
 end
