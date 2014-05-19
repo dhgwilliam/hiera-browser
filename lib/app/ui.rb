@@ -1,7 +1,8 @@
 require 'sinatra'
 require 'hiera_browser'
-require 'slim'
 require 'ap'
+require 'json'
+require 'slim'
 
 enable :sessions
 
@@ -12,6 +13,17 @@ end
 get '/nodes' do
   @nodes = Node.list
   slim :nodes
+end
+
+get '/api/v1/nodes' do
+  @nodes = Node.list
+  JSON.generate(@nodes)
+end
+
+get "/api/v1/node/:node" do
+  keys = session[:keys] || []
+  @values = Node.new(:certname => params[:node]).hiera_values(:additive_keys => keys).sort_by{|k,v|v.keys.pop}
+  JSON.generate(@values)
 end
 
 get '/node/:node' do

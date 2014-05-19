@@ -1,7 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    CFPropertyList (2.2.7)
+    CFPropertyList (2.2.8)
     awesome_print (1.2.0)
     coderay (1.1.0)
     facter (2.0.1)
@@ -14,10 +14,10 @@ GEM
       coderay (~> 1.0)
       method_source (~> 0.8)
       slop (~> 3.4)
-    pry-doc (0.4.5)
-      pry (>= 0.9)
-      yard (>= 0.8)
-    puppet (3.5.1)
+    pry-doc (0.6.0)
+      pry (~> 0.9)
+      yard (~> 0.8)
+    puppet (3.6.0)
       facter (> 1.6, < 3)
       hiera (~> 1.0)
       json_pure
@@ -35,7 +35,7 @@ GEM
     slim (2.0.2)
       temple (~> 0.6.6)
       tilt (>= 1.3.3, < 2.1)
-    slop (3.4.7)
+    slop (3.5.0)
     temple (0.6.7)
     tilt (1.4.1)
     yard (0.8.7.4)
@@ -48,7 +48,8 @@ DEPENDENCIES
   hiera (= 1.3.2)
   pry (= 0.9.12.6)
   pry-doc
-  puppet
+  puppet (~> 3)
   shotgun
-  sinatra
+  sinatra (~> 1.4.5)
   slim
+  tilt (= 1.4.1)
