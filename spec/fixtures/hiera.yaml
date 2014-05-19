@@ -8,4 +8,4 @@
   - common
 
 :yaml:
-  :datadir: /etc/puppet/hieradata
+  :datadir: ./spec/fixtures/hieradata

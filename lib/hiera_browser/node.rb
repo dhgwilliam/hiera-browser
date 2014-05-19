@@ -5,12 +5,14 @@ class Node
   attr_reader :certname, :facts, :node_dir
 
   @@node_dir = 
-    begin
-      File.join(Puppet[:yamldir],'node')
-    rescue Puppet::Settings::InterpolationError
-      Puppet.initialize_settings_for_run_mode(:master)
-      File.join(Puppet[:yamldir],'node')
+    if ENV['YAML_DIR']
+      ENV['YAML_DIR']
+    elsif File.exist?('/var/opt/lib/pe-puppet/yaml')
+      '/var/opt/lib/pe-puppet/yaml/node'
+    else
+      '/var/lib/puppet/yaml/node'
     end
+
 
   def initialize(args)
     @certname = args[:certname]
