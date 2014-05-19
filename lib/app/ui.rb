@@ -4,8 +4,6 @@ require 'ap'
 require 'json'
 require 'slim'
 
-enable :sessions
-
 get '/' do
   redirect('/nodes')
 end
