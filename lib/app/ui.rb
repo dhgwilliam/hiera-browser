@@ -35,15 +35,14 @@ class HieraBrowserUI < Sinatra::Application
   end
 
   get '/node/:node' do |node|
-    @node = node
-    @title = "node: #{node}"
+    @title, @node = "node: #{node}", node
     keys = session[:keys] || []
     @values = Node.new(:certname => node).sorted_values(:keys => keys)
     slim :node
   end
 
   get '/add/additive/:key' do |key|
-    session[:keys] = Array.new unless session[:keys]
+    session[:keys] = session[:keys] || []
     session[:keys] << key
     redirect back
   end
