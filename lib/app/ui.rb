@@ -13,13 +13,13 @@ class HieraBrowserUI < Sinatra::Application
 
   get "/api/v1/node/:node" do |node|
     keys = session[:keys] || []
-    @values = Node.new(:certname => node).sorted_values(:keys => keys)
+    @values = Node.new(:certname => node).hiera_values(:additive_keys => keys)
     JSON.generate(@values)
   end
 
   post "/api/v1/node/:node" do |node|
     keys = JSON.instance_eval(request['keys']) || []
-    @values = Node.new(:certname => node).sorted_values(:keys => keys)
+    @values = Node.new(:certname => node).hiera_values(:additive_keys => keys)
     JSON.generate(@values)
   end
 

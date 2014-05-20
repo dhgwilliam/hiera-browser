@@ -2,14 +2,13 @@
 h1 = @node
 - @values.each do |key, value|
   - $stdout = StringIO.new
-  - key = value.keys.pop
   - if session[:keys] && session[:keys].include?(key)
     a href="/remove/additive/#{key}" => key
     | (additive)
   - else
     a href="/add/additive/#{key}" = key
   | :
-  - ap value.values.pop, :html => true
+  - ap value, :html => true
   == $stdout.string
   - $stdout = STDOUT
   br

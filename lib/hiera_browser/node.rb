@@ -26,12 +26,13 @@ class Node
 
   def hiera_values(args={})
     additive_keys = args[:additive_keys] || []
-    @hiera.get_all(:scope => facts_yaml, :additive_keys => additive_keys)
+    @hiera.get_all(:scope => facts_yaml, :additive_keys => additive_keys).
+      values.inject({}){|a,v| a.merge!(v)}
   end
 
   def sorted_values(args)
     keys = args[:keys]
-    hiera_values(:additive_keys => keys).sort_by{|k,v|v.keys.pop}
+    hiera_values(:additive_keys => keys).sort_by{|k,v|k}
   end
 
   def self.list
