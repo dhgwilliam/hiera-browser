@@ -1,0 +1,247 @@
+--- !ruby/object:Puppet::Node
+  name: master
+  classes: 
+    pe_mcollective: {}
+    pe_console_prune: 
+      prune_upto: 30
+    "pe_mcollective::role::console": {}
+    "pe_mcollective::role::master": {}
+    "pe_puppetdb::pe": 
+      database_host: localhost
+      database_name: pe-puppetdb
+      database_port: 5432
+      database_username: pe-puppetdb
+      listen_port: 8080
+      manage_database: true
+      ssl_listen_address: master
+      ssl_listen_port: 8081
+    "pe_puppetdb::pe::master": 
+      enable_reports: true
+      manage_config: true
+      manage_report_processor: true
+      manage_routes: true
+      manage_storeconfigs: true
+      puppetdb_port: 8081
+      puppetdb_server: master
+    pe_repo: {}
+    "pe_repo::platform::el_6_x86_64": {}
+    "puppet_enterprise::license": {}
+  parameters: 
+    architecture: x86_64
+    augeasversion: "1.1.0"
+    kernel: Linux
+    blockdevice_sda_size: "21474836480"
+    blockdevice_sda_vendor: ATA
+    blockdevice_sda_model: "VBOX HARDDISK"
+    blockdevices: sda
+    domain: hsd1.or.comcast.net
+    macaddress: "08:00:27:A3:80:63"
+    osfamily: RedHat
+    operatingsystem: CentOS
+    facterversion: "1.7.5"
+    filesystems: "ext4,iso9660"
+    fqdn: master.hsd1.or.comcast.net
+    hardwareisa: x86_64
+    hardwaremodel: x86_64
+    hostname: master
+    id: root
+    interfaces: "eth0,eth1,lo"
+    ipaddress_eth0: "10.0.2.15"
+    macaddress_eth0: "08:00:27:A3:80:63"
+    netmask_eth0: "255.255.255.0"
+    mtu_eth0: "1500"
+    ipaddress_eth1: "172.16.0.2"
+    macaddress_eth1: "08:00:27:D1:84:04"
+    netmask_eth1: "255.255.255.0"
+    mtu_eth1: "1500"
+    ipaddress_lo: "127.0.0.1"
+    netmask_lo: "255.0.0.0"
+    mtu_lo: "16436"
+    ipaddress: "10.0.2.15"
+    kernelmajversion: "2.6"
+    kernelrelease: "2.6.32-431.el6.x86_64"
+    kernelversion: "2.6.32"
+    boardmanufacturer: "Oracle Corporation"
+    boardproductname: VirtualBox
+    boardserialnumber: "0"
+    bios_vendor: "innotek GmbH"
+    bios_version: VirtualBox
+    bios_release_date: "12/01/2006"
+    manufacturer: "innotek GmbH"
+    productname: VirtualBox
+    serialnumber: "0"
+    uuid: DB1083DB-3B45-4FFC-8317-0D2BFA0A3DC3
+    type: Other
+    memorysize: "996.43 MB"
+    memoryfree: "117.73 MB"
+    swapsize: "991.99 MB"
+    swapfree: "153.46 MB"
+    swapsize_mb: "991.99"
+    swapfree_mb: "153.46"
+    memorysize_mb: "996.43"
+    memoryfree_mb: "117.73"
+    memorytotal: "996.43 MB"
+    netmask: "255.255.255.0"
+    network_eth0: "10.0.2.0"
+    network_eth1: "172.16.0.0"
+    network_lo: "127.0.0.0"
+    operatingsystemmajrelease: "6"
+    operatingsystemrelease: "6.5"
+    path: "/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin"
+    physicalprocessorcount: "1"
+    processor0: "Intel(R) Core(TM) i7-3667U CPU @ 2.00GHz"
+    processorcount: "1"
+    ps: "ps -ef"
+    puppetversion: "3.4.3 (Puppet Enterprise 3.2.2)"
+    rubysitedir: /opt/puppet/lib/ruby/site_ruby/1.9.1
+    rubyversion: "1.9.3"
+    selinux: "false"
+    sshdsakey: "AAAAB3NzaC1kc3MAAACBAK15o+RfnbHRv9xhSTdppuIvLbr9DEM30TnVT6daNzNiL+eza+0tPTUiQlf1GtsvufW9MCT+4/ruOQM8I5f4EKsOsXLajieGflkWBWhfC2ZR45cBxUMpVR//2t57qMMAqugIY5kCzmCrbLIwrrATP+2K4+4DzIrLWvI40VAblv4HAAAAFQCJ3rLoZ4m5geoO64qPxvzWxAW18wAAAIEAork3EC5YjapVUbTNkNuyroNxBvLFeCmxgTsSSvfd6JVl1lKs+jKnEtbhaZvcNWnrrKu5dFaD2VcHlqcLTAY8ufhWYbjAfoF+Yp7c2Zf8zSX8ehq1XnvkP5ApqVzqMTZ3ZVRPap6BqC/C1yUEb/NZbP4EDW9BQL/bd1PBBKJTtJgAAACAAhw7GwCMQ25WJaUzFFxpK66imO4Fh2WgMdxFRhhfW6aURVvSkSd7VJ7x490IJUUretn3evS03nTKlx4vvRql3VOqmxQyllXZtegwY1fYUnx7oKabMcfxiKBJuBxc21uxzR5CKmVsmxo7B/IINURF52b2lS1jqWTg1XOcoyOR5iw="
+    sshfp_dsa: |-
+      SSHFP 2 1 efcbb1993a1361c0c4997f0f2336d7de9c832042
+      SSHFP 2 2 8c3c0edeb5c508efde31d230874c04e642ef83b72d1d3d51d9e164e5ba6525c3
+    sshrsakey: "AAAAB3NzaC1yc2EAAAABIwAAAQEAzrMvP7woVRAqXt0+2TPANHRWWB2xZxkfgonMf/vMGQgMAPGTYZN2H8LxDdljrgJAHGUCSugq7Zavvp0PBV0fnm+h8E48dEA7J5n7Olh/M7vRU09k4OC/qnQIhygQyD3zyc7TYDlX9k77Kh4VJIRkHDbiHvlyzgyW3JsuYebV0EKpEIn6Bb+CkkitaK2gDZQss9x20cDgzOF6gRFESUIRGKT9G1SZYk9c/FkDzXejMFD/Ucnc6MhbjK5tGOMTQYCOwxwesQy7+9gLfF3t5rRCuo/3e+URiMqUQsYp7ySYXLiRwLCosCK45MF6dh3bDMiG6p0ZhCB7sRn0TQWAAovU0w=="
+    sshfp_rsa: |-
+      SSHFP 1 1 fb0207d1e3ec5762fc04411bad7d47e2779d796d
+      SSHFP 1 2 674854dde3a79fb57ac14fb8136d497102faabc972d9b6887e98255bf86ec886
+    timezone: UTC
+    uniqueid: "007f0101"
+    uptime: "1 day"
+    uptime_days: "1"
+    uptime_hours: "41"
+    uptime_seconds: "150167"
+    virtual: virtualbox
+    is_virtual: "true"
+    concat_basedir: /var/opt/lib/pe-puppet/concat
+    custom_auth_conf: "false"
+    ip6tables_version: "1.4.7"
+    iptables_version: "1.4.7"
+    pe_build: "3.2.2"
+    pe_postgres_default_version: "8.4"
+    pe_puppetdb_server_status: configured
+    pe_version: "3.2.2"
+    is_pe: "true"
+    pe_major_version: "3"
+    pe_minor_version: "2"
+    pe_patch_version: "2"
+    postgres_default_version: "8.4"
+    puppet_vardir: /var/opt/lib/pe-puppet
+    root_home: /root
+    staging_http_get: curl
+    clientcert: master
+    clientversion: "3.4.3 (Puppet Enterprise 3.2.2)"
+    clientnoop: "false"
+    "_timestamp": "2014-05-19 17:43:07 +0000"
+    environment: production
+  facts: !ruby/object:Puppet::Node::Facts
+    name: master
+    values: 
+      architecture: x86_64
+      augeasversion: "1.1.0"
+      kernel: Linux
+      blockdevice_sda_size: "21474836480"
+      blockdevice_sda_vendor: ATA
+      blockdevice_sda_model: "VBOX HARDDISK"
+      blockdevices: sda
+      domain: hsd1.or.comcast.net
+      macaddress: "08:00:27:A3:80:63"
+      osfamily: RedHat
+      operatingsystem: CentOS
+      facterversion: "1.7.5"
+      filesystems: "ext4,iso9660"
+      fqdn: master.hsd1.or.comcast.net
+      hardwareisa: x86_64
+      hardwaremodel: x86_64
+      hostname: master
+      id: root
+      interfaces: "eth0,eth1,lo"
+      ipaddress_eth0: "10.0.2.15"
+      macaddress_eth0: "08:00:27:A3:80:63"
+      netmask_eth0: "255.255.255.0"
+      mtu_eth0: "1500"
+      ipaddress_eth1: "172.16.0.2"
+      macaddress_eth1: "08:00:27:D1:84:04"
+      netmask_eth1: "255.255.255.0"
+      mtu_eth1: "1500"
+      ipaddress_lo: "127.0.0.1"
+      netmask_lo: "255.0.0.0"
+      mtu_lo: "16436"
+      ipaddress: "10.0.2.15"
+      kernelmajversion: "2.6"
+      kernelrelease: "2.6.32-431.el6.x86_64"
+      kernelversion: "2.6.32"
+      boardmanufacturer: "Oracle Corporation"
+      boardproductname: VirtualBox
+      boardserialnumber: "0"
+      bios_vendor: "innotek GmbH"
+      bios_version: VirtualBox
+      bios_release_date: "12/01/2006"
+      manufacturer: "innotek GmbH"
+      productname: VirtualBox
+      serialnumber: "0"
+      uuid: DB1083DB-3B45-4FFC-8317-0D2BFA0A3DC3
+      type: Other
+      memorysize: "996.43 MB"
+      memoryfree: "117.73 MB"
+      swapsize: "991.99 MB"
+      swapfree: "153.46 MB"
+      swapsize_mb: "991.99"
+      swapfree_mb: "153.46"
+      memorysize_mb: "996.43"
+      memoryfree_mb: "117.73"
+      memorytotal: "996.43 MB"
+      netmask: "255.255.255.0"
+      network_eth0: "10.0.2.0"
+      network_eth1: "172.16.0.0"
+      network_lo: "127.0.0.0"
+      operatingsystemmajrelease: "6"
+      operatingsystemrelease: "6.5"
+      path: "/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin"
+      physicalprocessorcount: "1"
+      processor0: "Intel(R) Core(TM) i7-3667U CPU @ 2.00GHz"
+      processorcount: "1"
+      ps: "ps -ef"
+      puppetversion: "3.4.3 (Puppet Enterprise 3.2.2)"
+      rubysitedir: /opt/puppet/lib/ruby/site_ruby/1.9.1
+      rubyversion: "1.9.3"
+      selinux: "false"
+      sshdsakey: "AAAAB3NzaC1kc3MAAACBAK15o+RfnbHRv9xhSTdppuIvLbr9DEM30TnVT6daNzNiL+eza+0tPTUiQlf1GtsvufW9MCT+4/ruOQM8I5f4EKsOsXLajieGflkWBWhfC2ZR45cBxUMpVR//2t57qMMAqugIY5kCzmCrbLIwrrATP+2K4+4DzIrLWvI40VAblv4HAAAAFQCJ3rLoZ4m5geoO64qPxvzWxAW18wAAAIEAork3EC5YjapVUbTNkNuyroNxBvLFeCmxgTsSSvfd6JVl1lKs+jKnEtbhaZvcNWnrrKu5dFaD2VcHlqcLTAY8ufhWYbjAfoF+Yp7c2Zf8zSX8ehq1XnvkP5ApqVzqMTZ3ZVRPap6BqC/C1yUEb/NZbP4EDW9BQL/bd1PBBKJTtJgAAACAAhw7GwCMQ25WJaUzFFxpK66imO4Fh2WgMdxFRhhfW6aURVvSkSd7VJ7x490IJUUretn3evS03nTKlx4vvRql3VOqmxQyllXZtegwY1fYUnx7oKabMcfxiKBJuBxc21uxzR5CKmVsmxo7B/IINURF52b2lS1jqWTg1XOcoyOR5iw="
+      sshfp_dsa: |-
+        SSHFP 2 1 efcbb1993a1361c0c4997f0f2336d7de9c832042
+        SSHFP 2 2 8c3c0edeb5c508efde31d230874c04e642ef83b72d1d3d51d9e164e5ba6525c3
+      sshrsakey: "AAAAB3NzaC1yc2EAAAABIwAAAQEAzrMvP7woVRAqXt0+2TPANHRWWB2xZxkfgonMf/vMGQgMAPGTYZN2H8LxDdljrgJAHGUCSugq7Zavvp0PBV0fnm+h8E48dEA7J5n7Olh/M7vRU09k4OC/qnQIhygQyD3zyc7TYDlX9k77Kh4VJIRkHDbiHvlyzgyW3JsuYebV0EKpEIn6Bb+CkkitaK2gDZQss9x20cDgzOF6gRFESUIRGKT9G1SZYk9c/FkDzXejMFD/Ucnc6MhbjK5tGOMTQYCOwxwesQy7+9gLfF3t5rRCuo/3e+URiMqUQsYp7ySYXLiRwLCosCK45MF6dh3bDMiG6p0ZhCB7sRn0TQWAAovU0w=="
+      sshfp_rsa: |-
+        SSHFP 1 1 fb0207d1e3ec5762fc04411bad7d47e2779d796d
+        SSHFP 1 2 674854dde3a79fb57ac14fb8136d497102faabc972d9b6887e98255bf86ec886
+      timezone: UTC
+      uniqueid: "007f0101"
+      uptime: "1 day"
+      uptime_days: "1"
+      uptime_hours: "41"
+      uptime_seconds: "150167"
+      virtual: virtualbox
+      is_virtual: "true"
+      concat_basedir: /var/opt/lib/pe-puppet/concat
+      custom_auth_conf: "false"
+      ip6tables_version: "1.4.7"
+      iptables_version: "1.4.7"
+      pe_build: "3.2.2"
+      pe_postgres_default_version: "8.4"
+      pe_puppetdb_server_status: configured
+      pe_version: "3.2.2"
+      is_pe: "true"
+      pe_major_version: "3"
+      pe_minor_version: "2"
+      pe_patch_version: "2"
+      postgres_default_version: "8.4"
+      puppet_vardir: /var/opt/lib/pe-puppet
+      root_home: /root
+      staging_http_get: curl
+      clientcert: master
+      clientversion: "3.4.3 (Puppet Enterprise 3.2.2)"
+      clientnoop: "false"
+      "_timestamp": "2014-05-19 17:43:07 +0000"
+    expiration: 2014-05-19 18:13:06.979008 +00:00
+  time: 2014-05-19 17:43:16.551734 +00:00
+  environment: !ruby/sym production
+  expiration: 2014-05-19 18:13:16.694185 +00:00

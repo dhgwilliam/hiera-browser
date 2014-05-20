@@ -11,4 +11,6 @@ group :development do
   gem 'pry', '0.9.12.6'
   gem 'pry-doc'
   gem 'shotgun'
+  gem 'lookout-rack-test'
+  gem 'rake'
 end

@@ -30,9 +30,7 @@ class Node
   end
 
   def self.list
-    files = Dir.chdir(@@node_dir) do
-      Dir.glob('**/*.yaml')
-    end
+    files = Dir.chdir(@@node_dir) { Dir.glob('**/*.yaml') }
     files.map{|f| f.split('.yaml')}.flatten
   end
 end

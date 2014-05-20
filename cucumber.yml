@@ -1,0 +1,5 @@
+<%
+  standard = "--expand -r features --format pretty"
+%>
+
+default: <%= standard %>

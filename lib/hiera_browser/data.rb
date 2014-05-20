@@ -9,19 +9,15 @@ class DataDir
   end
 
   def yaml_files
-    Dir.chdir(@path) do
-      Dir.glob('**/*.yaml')
-    end
+    Dir.chdir(@path) { Dir.glob('**/*.yaml') }
   end
 
   def datafiles
-    yaml_files.map{|f| 
-      DataFile.new(:path => File.join(@path,f))}.flatten
+    yaml_files.map{|f| DataFile.new(:path => File.join(@path,f))}.flatten
   end
 
   def keys
-    datafiles.map{|datafile|
-      datafile.keys}.flatten.uniq.sort
+    datafiles.map{|datafile| datafile.keys}.flatten.uniq.sort
   end
 end
 
