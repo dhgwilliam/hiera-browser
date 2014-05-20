@@ -14,7 +14,7 @@ There is real live (fake) test data so you can get a demo up and running fairly 
 
 ```
 bundle install
-bundle exec shotgun
+bundle exec rake demo
 ```
 
 ## live data

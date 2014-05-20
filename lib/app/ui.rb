@@ -5,48 +5,51 @@ require 'json'
 require 'slim'
 
 class HieraBrowserUI < Sinatra::Application
-  get '/' do
-    redirect('/nodes')
-  end
-
-  get '/nodes' do
-    @nodes = Node.list
-    slim :nodes
-  end
-
+  # api
   get '/api/v1/nodes' do
     @nodes = Node.list
     JSON.generate(@nodes)
   end
 
-  get "/api/v1/node/:node" do
+  get "/api/v1/node/:node" do |node|
     keys = session[:keys] || []
-    @values = Node.new(:certname => params[:node]).
-      hiera_values(:additive_keys => keys).
-      sort_by{|k,v|v.keys.pop}
+    @values = Node.new(:certname => node).sorted_values(:keys => keys)
     JSON.generate(@values)
   end
 
-  post "/api/v1/node/:node" do
+  post "/api/v1/node/:node" do |node|
     keys = JSON.instance_eval(request['keys']) || []
-    @values = Node.new(:certname => params[:node]).hiera_values(:additive_keys => keys).sort_by{|k,v|v.keys.pop}
+    @values = Node.new(:certname => node).sorted_values(:keys => keys)
     JSON.generate(@values)
   end
 
-  get '/node/:node' do
+  # human
+  get '/' do
+    redirect('/nodes')
+  end
+
+  get '/nodes' do
+    @title = "node list"
+    @nodes = Node.list
+    slim :nodes
+  end
+
+  get '/node/:node' do |node|
+    @node = node
+    @title = "node: #{node}"
     keys = session[:keys] || []
-    @values = Node.new(:certname => params[:node]).hiera_values(:additive_keys => keys).sort_by{|k,v|v.keys.pop}
+    @values = Node.new(:certname => node).sorted_values(:keys => keys)
     slim :node
   end
 
-  get '/add/additive/:key' do
+  get '/add/additive/:key' do |key|
     session[:keys] = Array.new unless session[:keys]
-    session[:keys] << params[:key]
+    session[:keys] << key
     redirect back
   end
 
-  get '/remove/additive/:key' do
-    session[:keys].reject!{|key| key == params[:key]}
+  get '/remove/additive/:key' do |key|
+    session[:keys].reject!{|k| k == key}
     redirect back
   end
 

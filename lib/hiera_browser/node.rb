@@ -29,6 +29,11 @@ class Node
     @hiera.get_all(:scope => facts_yaml, :additive_keys => additive_keys)
   end
 
+  def sorted_values(args)
+    keys = args[:keys]
+    hiera_values(:additive_keys => keys).sort_by{|k,v|v.keys.pop}
+  end
+
   def self.list
     files = Dir.chdir(@@node_dir) { Dir.glob('**/*.yaml') }
     files.map{|f| f.split('.yaml')}.flatten
