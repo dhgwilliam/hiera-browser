@@ -58,6 +58,10 @@ class HieraController
       case value.values.pop
       when Hash
         :hash
+      when TrueClass
+        :priority
+      when FalseClass
+        :priority
       else
         :array
       end

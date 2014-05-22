@@ -9,3 +9,4 @@ test_hash:
   test_hash_key2: 'test_hash_key2 value from master.yaml'
   test_hash_key3: 'test_hash_key3 value from master.yaml'
   test_hash_merge_master: 'test_hash_merge_key from master.yaml'
+test_bool: true
