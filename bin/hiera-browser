@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+
+ENV['RACK_ENV'] = 'production'
+
+require 'rack'
+require 'rack/server'
+require 'app/ui'
+
+if ENV['HIERA_YAML'] && File.exist?(ENV['HIERA_YAML'])
+  Rack::Server.start :app => HieraBrowserUI
+else
+  puts "Must provide the location of your hiera.yaml as ENV['HIERA_YAML']"
+end

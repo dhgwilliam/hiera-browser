@@ -4,6 +4,8 @@ require 'ap'
 require 'json'
 require 'slim'
 
+use Rack::Session::Cookie, :secret => '4zENWx0ruhWU3ZN'
+
 class HieraBrowserUI < Sinatra::Application
   # api
   get '/api/v1/nodes' do
@@ -53,6 +55,11 @@ class HieraBrowserUI < Sinatra::Application
   end
 
   get '/debug/session' do
-    JSON.generate(session[:keys])
+    debug_hash = {
+      :keys => session[:keys],
+      :env => settings.environment,
+      :rack_env => ENV['RACK_ENV'],
+    }
+    JSON.generate(debug_hash)
   end
 end

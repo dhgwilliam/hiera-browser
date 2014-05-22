@@ -36,7 +36,11 @@ class Node
   end
 
   def self.list
-    files = Dir.chdir(@@node_dir) { Dir.glob('**/*.yaml') }
-    files.map{|f| f.split('.yaml')}.flatten
+    begin
+      files = Dir.chdir(@@node_dir) { Dir.glob('**/*.yaml') }
+      files.map{|f| f.split('.yaml')}.flatten
+    rescue Errno::ENOENT => e
+      raise "Can't find your $yamldir: #{e}"
+    end
   end
 end
