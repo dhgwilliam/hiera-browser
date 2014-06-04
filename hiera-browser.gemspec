@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'hiera-browser'
-  s.version = '0.1.0.pre'
+  s.version = '1.0.0.pre'
   s.licenses = ['APACHE 2.0']
   s.summary = 'Naive browser for hiera data'
   s.description = 'Tries to guess what values hiera will return for any existing node in your infrastructure'
