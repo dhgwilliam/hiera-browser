@@ -18,16 +18,13 @@ class HieraController
   end
 
   def datadirs
-    Node.environments.map{|e|
-      config[:backends].map{|b| 
-        path = config[b.to_sym][:datadir]
-        DataDir.new(
-          :hiera       => self,
-          :path        => path,
-          :environment => e,
-        )
-      }
-    }.flatten
+    config[:backends].map{|b| 
+      path = config[b.to_sym][:datadir]
+      DataDir.new(
+        :hiera       => self,
+        :path        => path,
+      )
+    }
   end
 
   def keys

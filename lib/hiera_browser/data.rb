@@ -4,17 +4,32 @@ class DataDir
   attr_reader :path
 
   def initialize(args={})
-    @environment = args[:environment] || 'production'
     @hiera = args[:hiera]
-    @path = args[:path].gsub(/\%\{.*\}/, @environment)
+    @paths = render_paths(:path => args[:path])
+  end
+
+  def render_paths(args)
+    begin
+      variables = args[:path].match(/\%\{([a-z_\:]+)\}/).captures
+      variables.map{|v|
+        Node.parameters[v].map{|param|
+          args[:path].gsub(/\%\{#{v}\}/, param)}.flatten
+      }.flatten
+    rescue NoMethodError
+      [args[:path]]
+    end
   end
 
   def yaml_files
-    Dir.chdir(@path) { Dir.glob('**/*.yaml') }
+    @paths.map{|p|
+      Dir.chdir(p) { Dir.glob('**/*.yaml') }
+    }.flatten
   end
 
   def datafiles
-    yaml_files.map{|f| DataFile.new(:path => File.join(@path,f))}.flatten
+    @paths.map{|path|
+      yaml_files.map{|f| DataFile.new(:path => File.join(path,f))}.flatten
+    }.flatten
   end
 
   def keys
@@ -26,8 +41,7 @@ class DataFile
   attr_reader :path
 
   def initialize(args={})
-    @environment = args[:environment] || 'production'
-    @path = args[:path].gsub(/\%\{.*\}/, @environment)
+    @path = args[:path]
     @keys = keys
   end
 

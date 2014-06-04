@@ -53,9 +53,19 @@ class Node
     files.map{|f| f.split('.yaml')}.flatten
   end
 
-  def self.environments
+  def self.parameters
     files = self.files
-    files.map{|f|
-      YAML.load_file(File.join(@@node_dir,f)).environment.to_s}.uniq
+    files.map{|f| YAML.load_file(File.join(@@node_dir,f)).parameters}.
+      inject({}){|a,params|
+        params.each {|key, value| 
+          a[key] = [] unless a[key]
+          a[key] << value unless a[key].include? value
+        }
+        a 
+      }
+  end
+
+  def self.environments
+    self.parameters["environment"]
   end
 end

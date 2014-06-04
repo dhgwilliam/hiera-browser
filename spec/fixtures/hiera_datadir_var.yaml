@@ -8,6 +8,6 @@
   - common
 
 :yaml:
-  :datadir: ./spec/fixtures/%{environment}/hieradata
+  :datadir: ./spec/fixtures/%{virtual}/hieradata
 
 :logger: noop
