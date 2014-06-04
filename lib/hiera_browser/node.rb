@@ -58,5 +58,4 @@ class Node
     files.map{|f|
       YAML.load_file(File.join(@@node_dir,f)).environment.to_s}.uniq
   end
-
 end

@@ -14,6 +14,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'slim'
   s.add_runtime_dependency 'awesome_print', '1.2.0'
   s.add_runtime_dependency 'tilt', '1.4.1'
+  s.add_runtime_dependency 'dotenv'
   s.add_development_dependency 'puma', '~> 2.8.2'
   s.add_development_dependency 'puppet', '~> 3'
   s.add_development_dependency 'pry', '0.9.12.6'

@@ -1,3 +1,6 @@
+require 'dotenv'
+Dotenv.load
+
 require 'sinatra'
 require 'hiera_browser'
 require 'ap'
