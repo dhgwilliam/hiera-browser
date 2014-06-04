@@ -35,9 +35,29 @@ class HieraController
     config[:hierarchy]
   end
 
+  def top_scopify(args)
+    scope = args[:scope]
+    fix_keys = hierarchy.map{|datasource|
+      begin
+        datasource.match(/\%\{([\:a-z_]+)\}/)[1]
+      rescue NoMethodError
+        datasource
+      end
+    }
+    fix_keys.select!{|datasource| datasource.start_with?("::")} unless fix_keys.empty?
+    scope.inject({}){|a,fact|
+      if fix_keys.include?("::#{fact.first}")
+        a["::#{fact.first}"] = fact.last
+      else
+        a[fact.first] = fact.last
+      end
+      a
+    }
+  end
+
   def lookup(args)
     key = args[:key]
-    scope = args[:scope]
+    scope = top_scopify(:scope => args[:scope])
     resolution_type = args[:resolution_type] || :priority
     Hash[*[key,hiera.lookup(key, nil, scope, nil, resolution_type)]]
   end

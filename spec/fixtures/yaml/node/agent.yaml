@@ -3,6 +3,7 @@
   classes: 
     pe_mcollective: {}
   parameters: 
+    datacenter: "pdx"
     architecture: x86_64
     augeasversion: "1.1.0"
     kernel: Linux

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    hiera-browser (0.1.0.pre)
+    hiera-browser (1.0.0.pre)
       awesome_print (= 1.2.0)
       dotenv
       hiera (= 1.3.2)

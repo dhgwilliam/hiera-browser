@@ -3,8 +3,8 @@
   - yaml
 
 :hierarchy:
-  - "hostname/%{hostname}"
-  - "datacenter/%{datacenter}"
+  - "hostname/%{::hostname}"
+  - "datacenter/%{::datacenter}"
   - common
 
 :yaml:
