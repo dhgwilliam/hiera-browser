@@ -13,20 +13,21 @@ class Node
       '/var/lib/puppet/yaml/node'
     end
 
-
   def initialize(args)
-    @certname = args[:certname]
-    @facts = facts_yaml
-    @hiera = args[:hiera] || HieraController.new
+    @certname    = args[:certname]
+    @facts       = facts_yaml
+    @hiera       = args[:hiera] || HieraController.new
   end
 
   def facts_yaml
-    YAML.load_file(File.join(@@node_dir,"#{@certname}.yaml")).facts.values
+    path = File.join(@@node_dir,"#{@certname}.yaml")
+    node = YAML.load_file(path)
+    node.parameters.merge(node.facts.values)
   end
 
   def hiera_values(args={})
     additive_keys = args[:additive_keys] || []
-    @hiera.get_all(:scope => facts_yaml, :additive_keys => additive_keys).
+    @hiera.get_all(:scope => @facts, :additive_keys => additive_keys).
       values.inject({}){|a,v| a.merge!(v)}
   end
 
@@ -35,12 +36,27 @@ class Node
     hiera_values(:additive_keys => keys).sort_by{|k,v|k}
   end
 
-  def self.list
+  def environment
+    @facts['environment']
+  end
+
+  def self.files
     begin
-      files = Dir.chdir(@@node_dir) { Dir.glob('**/*.yaml') }
-      files.map{|f| f.split('.yaml')}.flatten
+      Dir.chdir(@@node_dir) { Dir.glob('**/*.yaml') }
     rescue Errno::ENOENT => e
       raise "Can't find your $yamldir: #{e}"
     end
   end
+
+  def self.list
+    files = self.files
+    files.map{|f| f.split('.yaml')}.flatten
+  end
+
+  def self.environments
+    files = self.files
+    files.map{|f|
+      YAML.load_file(File.join(@@node_dir,f)).environment.to_s}.uniq
+  end
+
 end

@@ -18,13 +18,20 @@ class HieraController
   end
 
   def datadirs
-    config[:backends].map{|b| 
-      DataDir.new(:hiera => self, :path => config[b.to_sym][:datadir])}
+    Node.environments.map{|e|
+      config[:backends].map{|b| 
+        path = config[b.to_sym][:datadir]
+        DataDir.new(
+          :hiera       => self,
+          :path        => path,
+          :environment => e,
+        )
+      }
+    }.flatten
   end
 
   def keys
-    datadirs.map{|d|
-      d.keys}.flatten.uniq.sort
+    datadirs.map{|d| d.keys}.flatten.uniq.sort
   end
 
   def hierarchy
@@ -58,9 +65,7 @@ class HieraController
       case value.values.pop
       when Hash
         :hash
-      when TrueClass
-        :priority
-      when FalseClass
+      when TrueClass, FalseClass
         :priority
       else
         :array
@@ -68,4 +73,3 @@ class HieraController
     lookup(:key => key, :scope => scope, :resolution_type => lookup_type)
   end
 end
-

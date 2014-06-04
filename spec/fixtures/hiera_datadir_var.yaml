@@ -1,0 +1,13 @@
+---
+:backends:
+  - yaml
+
+:hierarchy:
+  - "hostname/%{hostname}"
+  - "datacenter/%{datacenter}"
+  - common
+
+:yaml:
+  :datadir: ./spec/fixtures/%{environment}/hieradata
+
+:logger: noop

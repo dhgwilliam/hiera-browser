@@ -1,0 +1,12 @@
+---
+test_string: 'test_string value from master.yaml'
+test_array:
+  - 'array value 1 from master.yaml'
+  - 'array value 2 from master.yaml'
+  - 'array value 3 from master.yaml'
+test_hash:
+  test_hash_key1: 'test_hash_key1 value from master.yaml'
+  test_hash_key2: 'test_hash_key2 value from master.yaml'
+  test_hash_key3: 'test_hash_key3 value from master.yaml'
+  test_hash_merge_master: 'test_hash_merge_key from master.yaml'
+test_bool: true

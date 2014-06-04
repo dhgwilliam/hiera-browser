@@ -4,8 +4,9 @@ class DataDir
   attr_reader :path
 
   def initialize(args={})
+    @environment = args[:environment] || 'production'
     @hiera = args[:hiera]
-    @path = args[:path]
+    @path = args[:path].gsub(/\%\{.*\}/, @environment)
   end
 
   def yaml_files
@@ -25,7 +26,8 @@ class DataFile
   attr_reader :path
 
   def initialize(args={})
-    @path = args[:path]
+    @environment = args[:environment] || 'production'
+    @path = args[:path].gsub(/\%\{.*\}/, @environment)
     @keys = keys
   end
 

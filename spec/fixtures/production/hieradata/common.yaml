@@ -1,0 +1,12 @@
+---
+test_string: 'test_string value from common.yaml (production)'
+test_array:
+  - 'array value 1 from common.yaml (production)'
+  - 'array value 2 from common.yaml (production)'
+  - 'array value 3 from common.yaml (production)'
+test_hash:
+  test_hash_key1: 'test_hash_key1 value from common.yaml (production)'
+  test_hash_key2: 'test_hash_key2 value from common.yaml (production)'
+  test_hash_key3: 'test_hash_key3 value from common.yaml (production)'
+  test_hash_merge_common: 'test_hash_merge_key from common.yaml (production)'
+test_bool: true
