@@ -48,9 +48,8 @@ class HieraController
     scope.inject({}){|a,fact|
       if fix_keys.include?("::#{fact.first}")
         a["::#{fact.first}"] = fact.last
-      else
-        a[fact.first] = fact.last
       end
+      a[fact.first] = fact.last
       a
     }
   end
@@ -63,7 +62,7 @@ class HieraController
   end
 
   def get_all(args)
-    scope = args[:scope]
+    scope = top_scopify(:scope => args[:scope])
     values = keys.inject({}){|a, k|
       a.merge({k => lookup(:key => k, :scope => scope)}) }
     if args[:additive_keys]
@@ -76,7 +75,7 @@ class HieraController
 
   def lookup_additive(args)
     key = args[:key]
-    scope = args[:scope]
+    scope = top_scopify(:scope => args[:scope])
     value = lookup(:key => key, :scope => scope)
     lookup_type = 
       case value.values.pop

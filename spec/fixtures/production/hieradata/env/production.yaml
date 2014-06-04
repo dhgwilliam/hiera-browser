@@ -1,0 +1,5 @@
+---
+test_array: "array value 1 from production.yaml (production)"
+test_hash: 
+  test_hash_merge_prod: "hash value 1 from production.yaml (production)"
+test_string: "string value 1 from production.yaml (production)"

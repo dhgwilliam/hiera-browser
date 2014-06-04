@@ -4,10 +4,11 @@
 
 :hierarchy:
   - "hostname/%{hostname}"
-  - "datacenter/%{datacenter}"
+  - "datacenter/%{::datacenter}"
+  - "env/%{::environment}"
   - common
 
 :yaml:
-  :datadir: ./spec/fixtures/%{virtual}/hieradata
+  :datadir: ./spec/fixtures/%{environment}/hieradata
 
 :logger: noop
