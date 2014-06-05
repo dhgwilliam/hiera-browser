@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'hiera-browser'
-  s.version = '1.2.0.pre'
+  s.version = '1.2.2'
   s.licenses = ['APACHE 2.0']
   s.summary = 'Naive browser for hiera data'
   s.description = 'Tries to guess what values hiera will return for any existing node in your infrastructure'
@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'awesome_print', '1.2.0'
   s.add_runtime_dependency 'tilt', '1.4.1'
   s.add_runtime_dependency 'dotenv'
-  s.add_runtime_dependency 'puma', '~> 2.8.2'
+  s.add_development_dependency 'puma', '~> 2.8.2'
   s.add_development_dependency 'puppet', '~> 3'
   s.add_development_dependency 'pry', '0.9.12.6'
   s.add_development_dependency 'pry-doc'

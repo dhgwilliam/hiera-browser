@@ -8,7 +8,6 @@ require 'app/ui'
 
 if ENV['HIERA_YAML'] && File.exist?(ENV['HIERA_YAML'])
   Rack::Server.start :app => HieraBrowserUI,
-    :server => 'puma',
     :Port => '5215'
 
 else

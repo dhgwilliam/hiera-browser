@@ -1,11 +1,10 @@
 PATH
   remote: .
   specs:
-    hiera-browser (1.2.0.pre)
+    hiera-browser (1.2.2)
       awesome_print (= 1.2.0)
       dotenv
       hiera (= 1.3.2)
-      puma (~> 2.8.2)
       sinatra (~> 1.4.5)
       slim
       tilt (= 1.4.1)
@@ -130,6 +129,7 @@ DEPENDENCIES
   lookout-rack-test
   pry (= 0.9.12.6)
   pry-doc
+  puma (~> 2.8.2)
   puppet (~> 3)
   rake
   shotgun
