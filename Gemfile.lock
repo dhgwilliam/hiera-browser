@@ -125,6 +125,10 @@ GEM
     rspec-mocks (2.14.6)
     shotgun (0.9)
       rack (>= 1.0)
+    simplecov (0.7.1)
+      multi_json (~> 1.0)
+      simplecov-html (~> 0.7.1)
+    simplecov-html (0.7.1)
     sinatra (1.4.5)
       rack (~> 1.4)
       rack-protection (~> 1.4)
@@ -159,4 +163,5 @@ DEPENDENCIES
   rake
   redcarpet
   shotgun
+  simplecov (~> 0.7.1)
   yard

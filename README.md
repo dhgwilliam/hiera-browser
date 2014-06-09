@@ -1,8 +1,47 @@
 # hiera-browser
 
-The MVP is something like: a tool that will simply make an admin aware of what values a node can expect to retrieve from hiera.
+[![Gem Version](https://badge.fury.io/rb/hiera-browser.svg)](http://badge.fury.io/rb/hiera-browser)
 
-## bootstrapping
+
+`hiera-browser` is a tool that simply makes an admin aware of what values a node can expect to retrieve from hiera.
+
+# installing
+
+For open source puppet:
+
+```
+gem install hiera-browser
+HIERA_YAML=$(puppet master --configprint hiera_config) hiera-browser
+```
+
+For PE:
+
+```
+/opt/puppet/bin/gem install hiera-browser
+HIERA_YAML=$(/opt/puppet/bin/puppet master --configprint hiera_config) /opt/puppet/bin/hiera-browser
+```
+
+as of right now, this runs `hiera-browser` as a totally exposed web server, so be careful
+
+# testing
+
+NOTE: as above, this will install the FOSS `puppet` gem, so be careful
+
+```
+bundle install
+bundle exec rake cucumber
+bundle exec rake rspec
+```
+
+or, alternatively, if you're actively developing against `hiera-browser`, it might be worthwhile to run `guard`:
+
+```
+bundle exec guard
+```
+
+This will launch a `guard` process that should run tests whenever you save classes or spec tests.
+
+# demoing
 
 There is real live (fake) test data so you can get a demo up and running fairly quickly:
 
@@ -11,27 +50,3 @@ bundle install
 bundle exec rake demo
 ```
 
-## live data
-
-**PLEASE DON'T DO THIS** as I'm not 100% sure this won't break your production puppet master. 
-
-Until I publish this gem, you can build it yourself to test on live data:
-
-```
-git clone git@github.com:dhgwilliam/hiera-browser.git
-gem build hiera-browser.gemspec
-gem install hiera-browser*.gem
-hiera-browser
-```
-
-as of right now, this runs hiera-browser as a totally exposed web server, so be careful
-
-# testing
-
-NOTE: as above, this will install the FOSS `puppet` gem, so be careful
-
-```
-cd hiera-browser
-bundle install
-bundle exec rake cucumber
-```

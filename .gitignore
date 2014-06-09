@@ -1,5 +1,7 @@
 .vagrant
 .pe_build
-*.swp
+*.sw?
 *.gem
 .yardoc
+coverage
+

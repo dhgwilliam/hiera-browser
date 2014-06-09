@@ -42,11 +42,13 @@ class HieraController
     config[:hierarchy]
   end
 
+  # Return the scope but with the addition of fully qualified 
+  #   variable keys for any level of the hierarchy that's formatted that way, e.g.:
+  #       { 'datacenter' => 'pdx', '::datacenter' => 'pdx' } 
+  #
   # @note needs to be moved to Node
   # @param args [{:scope => Hash}]
-  # @return [Hash] contains the scope but with the addition of fully qualified 
-  #   variable keys for any level of the hierarchy that's formatted that way, e.g.:
-  #       { 'datacenter' => 'pdx', '::datacenter' => 'pdx' }
+  # @return [Hash] 
   def top_scopify(args)
     scope = args[:scope]
     fix_keys = hierarchy.map{|datasource|
@@ -70,13 +72,15 @@ class HieraController
   # @param args [{:key => String, :scope => Hash, :resolution_type => Symbol}]
   # @return [Hash]
   def lookup(args = {})
-    raise ArgumentError, 'lookup() requires both :key and :scope args' unless args[:key] and args[:scope]
+    raise ArgumentError, 'HieraController#lookup requires both :key and :scope args' unless args[:key] and args[:scope]
     key = args[:key]
     scope = top_scopify(:scope => args[:scope])
     resolution_type = args[:resolution_type] || :priority
     Hash[*[key,hiera.lookup(key, nil, scope, nil, resolution_type)]]
   end
 
+  # Retrieve all node values for all known hiera keys
+  #
   # @param args [{:scope => Hash}]
   # @return [Hash]
   def get_all(args)
@@ -91,6 +95,9 @@ class HieraController
     values
   end
 
+  # Check return value of priority lookup in order to determine which "additive"
+  # resolution type to use, then repeat the lookup with the correct resolution type
+  #
   # @param args [{:key => String, :scope => Hash}]
   # @return [Hash]
   def lookup_additive(args)

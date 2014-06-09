@@ -6,6 +6,8 @@ describe HieraController do
       :hiera_yaml => File.join($fixtures_path, 'hiera_clean.yaml')
     ) }
 
+    let(:scope) { { '::hostname'   => 'agent', '::datacenter' => 'pdx', } }
+
     describe '#hiera' do
       it 'has a properly initialized Hiera object' do
         expect(hiera.hiera).to be_a(Hiera)
@@ -68,19 +70,78 @@ describe HieraController do
       end
 
       context 'when passed a :key, :scope and no :resolution_type' do
-        let(:scope) { {
-          '::hostname' => 'agent',
-          '::datacenter' => 'pdx',
-        } }
-        let(:h) { hiera.lookup(:key => 'test_string', :scope => scope) }
+        let(:key) { 'test_string' }
+        let(:lookup) { hiera.lookup(:key => key, :scope => scope) }
 
         it 'retrieves a value from hiera using priority override' do
-          expect(h).to be_a(Hash)
-          expect(h.values.first).to be_a(String)
-          expect(h.values).to include('test_string value from pdx.yaml')
+          expect(lookup).to be_a(Hash)
+          expect(lookup.values.first).to be_a(String)
+          expect(lookup.values).to include('test_string value from pdx.yaml')
+        end
+      end
+
+      context 'when passed a :key, :scope and :resolution_type => :hash' do
+        let(:key) { 'test_hash' }
+        let(:scope) { {
+          '::hostname'   => 'agent',
+          '::datacenter' => 'pdx',
+        } }
+        let(:resolution_type) { :hash }
+        let(:subject) { 
+          hiera.lookup(:key             => key,
+                       :scope           => scope,
+                       :resolution_type => resolution_type)
+        }
+
+        it 'retrieves a value from hiera using hash resolution type' do
+          expect(subject).to be_a(Hash)
+          expect(subject).to eq(
+            'test_hash' => {
+              'test_hash_key1'         => "test_hash_key1 value from pdx.yaml",
+              "test_hash_key2"         => "test_hash_key2 value from pdx.yaml",
+              "test_hash_key3"         => "test_hash_key3 value from pdx.yaml",
+              "test_hash_merge_common" => "test_hash_merge_key from common.yaml",
+              "test_hash_merge_pdx"    => "test_hash_merge_key from pdx.yaml"
+            }
+          )
         end
       end
     end
 
+    describe '#get_all' do
+      context 'when called with a valid scope and no additive keys' do
+        let(:subject) { hiera.get_all(:scope => scope) }
+
+        it 'returns a hash of keys and values' do
+          expect(subject).to be_a(Hash)
+          expect(subject).to eq( {
+            "test_array"  =>  {"test_array"=>["array value 1 from pdx.yaml", "array value 2 from pdx.yaml", "array value 3 from pdx.yaml"]},
+            "test_bool"   =>  {"test_bool"=>false},
+            "test_hash"   =>  {"test_hash"=>{"test_hash_key1"=>"test_hash_key1 value from pdx.yaml", "test_hash_key2"=>"test_hash_key2 value from pdx.yaml", "test_hash_key3"=>"test_hash_key3 value from pdx.yaml", "test_hash_merge_pdx"=>"test_hash_merge_key from pdx.yaml"}},
+            "test_string" =>  {"test_string"=>"test_string value from pdx.yaml"}}
+          )
+        end
+      end
+
+      context 'when called with a valid scope and one additive key' do
+        let(:additive_keys) { [ 'test_hash' ] }
+        let(:subject) { hiera.get_all(:scope => scope, :additive_keys => additive_keys) }
+
+        it 'returns a hash of keys and values' do
+          expect(subject).to be_a(Hash)
+          expect(subject).to eq({
+            "test_array"  =>  {"test_array"=>["array value 1 from pdx.yaml", "array value 2 from pdx.yaml", "array value 3 from pdx.yaml"]},
+            "test_bool"   =>  {"test_bool"=>false},
+            "test_string" =>  {"test_string"=>"test_string value from pdx.yaml"},
+            "test_hash"   =>  {"test_hash"=>{"test_hash_key1"=>"test_hash_key1 value from pdx.yaml", "test_hash_key2"=>"test_hash_key2 value from pdx.yaml", "test_hash_key3"=>"test_hash_key3 value from pdx.yaml", "test_hash_merge_common"=>"test_hash_merge_key from common.yaml", "test_hash_merge_pdx"=>"test_hash_merge_key from pdx.yaml"}}
+          })
+        end
+      end
+    end
+
+    describe '#lookup_additive' do
+      context 'when called with a valid :key and :scope' do
+      end
+    end
   end
 end
