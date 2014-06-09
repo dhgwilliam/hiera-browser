@@ -15,13 +15,22 @@ class Node
 
   def initialize(args)
     @certname    = args[:certname]
+    @node_dir    = args[:node_dir] || @@node_dir
     @facts       = facts_yaml
     @hiera       = args[:hiera] || HieraController.new
   end
 
+  def parameters(args = {})
+    facts_yaml
+  end
+
+  def load_yaml
+    path = File.join(@node_dir,"#{@certname}.yaml")
+    YAML.load_file(path)
+  end
+
   def facts_yaml
-    path = File.join(@@node_dir,"#{@certname}.yaml")
-    node = YAML.load_file(path)
+    node = load_yaml
     node.parameters.merge(node.facts.values)
   end
 
@@ -40,32 +49,34 @@ class Node
     @facts['environment']
   end
 
-  def self.files
-    begin
-      Dir.chdir(@@node_dir) { Dir.glob('**/*.yaml') }
-    rescue Errno::ENOENT => e
-      raise "Can't find your $yamldir: #{e}"
+  class << self
+    def files
+      begin
+        Dir.chdir(@@node_dir) { Dir.glob('**/*.yaml') }
+      rescue Errno::ENOENT => e
+        raise "Can't find your $yamldir: #{e}"
+      end
     end
-  end
 
-  def self.list
-    files = self.files
-    files.map{|f| f.split('.yaml')}.flatten
-  end
+    def list
+      files = self.files
+      files.map{|f| f.split('.yaml')}.flatten
+    end
 
-  def self.parameters
-    files = self.files
-    files.map{|f| YAML.load_file(File.join(@@node_dir,f)).parameters}.
-      inject({}){|a,params|
-        params.each {|key, value| 
-          a[key] = [] unless a[key]
-          a[key] << value unless a[key].include? value
+    def parameters
+      files = self.files
+      files.map{|f| YAML.load_file(File.join(@@node_dir,f)).parameters}.
+        inject({}){|a,params|
+          params.each {|key, value| 
+            a[key] = [] unless a[key]
+            a[key] << value unless a[key].include? value
+          }
+          a 
         }
-        a 
-      }
-  end
+    end
 
-  def self.environments
-    self.parameters["environment"]
+    def environments
+      self.parameters["environment"]
+    end
   end
 end

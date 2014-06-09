@@ -2,3 +2,4 @@
 .pe_build
 *.swp
 *.gem
+.yardoc

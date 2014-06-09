@@ -22,4 +22,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'shotgun'
   s.add_development_dependency 'lookout-rack-test'
   s.add_development_dependency 'rake'
+  s.add_development_dependency 'yard'
+  s.add_development_dependency 'redcarpet'
+  s.add_development_dependency 'guard'
+  s.add_development_dependency 'guard-rspec'
 end

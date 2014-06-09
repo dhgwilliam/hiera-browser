@@ -1,22 +1,27 @@
 require 'yaml'
 
 class HieraController
-  @@hiera_yaml = ENV['HIERA_YAML'] || './hiera.yaml'
   attr_reader :hiera_yaml
 
+  # @param args [{:hiera_yaml => String}] path to `hiera.yaml`
+  # @return [void]
   def initialize(args={})
-    @hiera_yaml = args[:hiera_yaml] || @@hiera_yaml
-    @hiera = hiera(:config => @hiera_yaml)
+    @hiera_yaml =  args[:hiera_yaml] || ENV['HIERA_YAML']
+    @hiera      =  hiera(:config => @hiera_yaml)
   end
 
+  # @param args [Hash] arguments to pass to Hiera.new()
+  # @return [Hiera]
   def hiera(args={})
     @hiera || Hiera.new(args)
   end
 
+  # @return [Hash]
   def config
     hiera.config
   end
 
+  # @return [Array]
   def datadirs
     config[:backends].map{|b| 
       path = config[b.to_sym][:datadir]
@@ -27,14 +32,21 @@ class HieraController
     }
   end
 
+  # @return [Array]
   def keys
     datadirs.map{|d| d.keys}.flatten.uniq.sort
   end
 
+  # @return [Array]
   def hierarchy
     config[:hierarchy]
   end
 
+  # @note needs to be moved to Node
+  # @param args [{:scope => Hash}]
+  # @return [Hash] contains the scope but with the addition of fully qualified 
+  #   variable keys for any level of the hierarchy that's formatted that way, e.g.:
+  #       { 'datacenter' => 'pdx', '::datacenter' => 'pdx' }
   def top_scopify(args)
     scope = args[:scope]
     fix_keys = hierarchy.map{|datasource|
@@ -46,21 +58,27 @@ class HieraController
     }
     fix_keys.select!{|datasource| datasource.start_with?("::")} unless fix_keys.empty?
     scope.inject({}){|a,fact|
-      if fix_keys.include?("::#{fact.first}")
-        a["::#{fact.first}"] = fact.last
-      end
+      a["::#{fact.first}"] = fact.last if fix_keys.include?("::#{fact.first}")
       a[fact.first] = fact.last
       a
     }
   end
 
-  def lookup(args)
+  # Basically shadows the Hiera#lookup method
+  #
+  # @note needs to be moved to Node#lookup
+  # @param args [{:key => String, :scope => Hash, :resolution_type => Symbol}]
+  # @return [Hash]
+  def lookup(args = {})
+    raise ArgumentError, 'lookup() requires both :key and :scope args' unless args[:key] and args[:scope]
     key = args[:key]
     scope = top_scopify(:scope => args[:scope])
     resolution_type = args[:resolution_type] || :priority
     Hash[*[key,hiera.lookup(key, nil, scope, nil, resolution_type)]]
   end
 
+  # @param args [{:scope => Hash}]
+  # @return [Hash]
   def get_all(args)
     scope = top_scopify(:scope => args[:scope])
     values = keys.inject({}){|a, k|
@@ -73,6 +91,8 @@ class HieraController
     values
   end
 
+  # @param args [{:key => String, :scope => Hash}]
+  # @return [Hash]
   def lookup_additive(args)
     key = args[:key]
     scope = top_scopify(:scope => args[:scope])
