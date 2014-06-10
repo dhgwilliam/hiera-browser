@@ -1,9 +1,7 @@
 require 'yaml'
 require 'puppet'
 
-class Node
-  attr_reader :certname, :facts, :node_dir
-
+class YamlDir
   @@node_dir = 
     if ENV['YAML_DIR']
       ENV['YAML_DIR']
@@ -13,9 +11,50 @@ class Node
       '/var/lib/puppet/yaml/node'
     end
 
+  def initialize(args = {})
+    @node_dir    = args[:node_dir] || @@node_dir
+  end
+
+  def path
+    @node_dir
+  end
+
+  def files
+    begin
+      Dir.chdir(@node_dir) { Dir.glob('**/*.yaml') }
+    rescue Errno::ENOENT => e
+      raise "Can't find your $yamldir: #{e}"
+    end
+  end
+
+  def list
+    files = self.files
+    files.map{|f| f.split('.yaml')}.flatten
+  end
+
+  def parameters
+    files = self.files
+    files.map{|f| YAML.load_file(File.join(@node_dir,f)).parameters}.
+      inject({}){|a,params|
+        params.each {|key, value| 
+          a[key] = [] unless a[key]
+          a[key] << value unless a[key].include? value
+        }
+        a 
+      }
+  end
+
+  def environments
+    self.parameters["environment"]
+  end
+end
+
+class Node
+  attr_reader :certname, :facts, :node_dir
+
   def initialize(args)
     @certname    = args[:certname]
-    @node_dir    = args[:node_dir] || @@node_dir
+    @node_dir    = YamlDir.new(:node_dir => args[:node_dir])
     @facts       = facts_yaml
     @hiera       = args[:hiera] || HieraController.new
   end
@@ -25,7 +64,7 @@ class Node
   end
 
   def load_yaml
-    path = File.join(@node_dir,"#{@certname}.yaml")
+    path = File.join(@node_dir.path,"#{@certname}.yaml")
     YAML.load_file(path)
   end
 
@@ -49,34 +88,4 @@ class Node
     @facts['environment']
   end
 
-  class << self
-    def files
-      begin
-        Dir.chdir(@@node_dir) { Dir.glob('**/*.yaml') }
-      rescue Errno::ENOENT => e
-        raise "Can't find your $yamldir: #{e}"
-      end
-    end
-
-    def list
-      files = self.files
-      files.map{|f| f.split('.yaml')}.flatten
-    end
-
-    def parameters
-      files = self.files
-      files.map{|f| YAML.load_file(File.join(@@node_dir,f)).parameters}.
-        inject({}){|a,params|
-          params.each {|key, value| 
-            a[key] = [] unless a[key]
-            a[key] << value unless a[key].include? value
-          }
-          a 
-        }
-    end
-
-    def environments
-      self.parameters["environment"]
-    end
-  end
 end
