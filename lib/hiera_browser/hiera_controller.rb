@@ -1,5 +1,8 @@
 require 'yaml'
 
+# HieraController gives us a reasonably limited interface for Hiera
+#
+# @author David Gwilliam
 class HieraController
   attr_reader :hiera_yaml
 

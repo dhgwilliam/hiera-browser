@@ -140,7 +140,38 @@ describe HieraController do
     end
 
     describe '#lookup_additive' do
-      context 'when called with a valid :key and :scope' do
+      context 'when called with a valid :key and :scope on a Hash value' do
+        let(:subject) { hiera.lookup_additive(:key => 'test_hash', :scope => scope) }
+
+        it 'determines the correct resolution type and returns all values for :key' do
+          expect(subject).to be_a(Hash)
+          expect(subject).to eq(
+            "test_hash"=>{"test_hash_key1"=>"test_hash_key1 value from pdx.yaml", "test_hash_key2"=>"test_hash_key2 value from pdx.yaml", "test_hash_key3"=>"test_hash_key3 value from pdx.yaml", "test_hash_merge_common"=>"test_hash_merge_key from common.yaml", "test_hash_merge_pdx"=>"test_hash_merge_key from pdx.yaml"}
+          )
+        end
+      end
+
+      context 'when called with a valid :key and :scope on a boolean' do
+        let(:key) { 'test_bool' }
+        let(:subject) { hiera.lookup_additive(:key => key, :scope => scope) }
+
+        it 'determines the correct resolution type and returns a single value for :key' do
+          expect(subject).to be_a(Hash)
+          expect(subject).to eq(hiera.lookup(:key => key, :scope => scope))
+        end
+      end
+
+      context 'when called with a valid :key and :scope on an array' do
+        let(:key) { 'test_array' }
+        let(:subject) { hiera.lookup_additive(:key => key, :scope => scope) }
+
+        it 'determines the correct resolution type and returns a single value for :key' do
+          expect(subject).to be_a(Hash)
+          expect(subject).to_not eq(hiera.lookup(:key => key, :scope => scope))
+          expect(subject).to eq(
+            {"test_array"=>["array value 1 from pdx.yaml", "array value 2 from pdx.yaml", "array value 3 from pdx.yaml", "array value 1 from common.yaml", "array value 2 from common.yaml", "array value 3 from common.yaml"]}
+          )
+        end
       end
     end
   end
