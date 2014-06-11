@@ -45,6 +45,16 @@ class HieraController
     config[:hierarchy]
   end
 
+  def hierarchy_variables
+    hierarchy.map{|datasource|
+      begin
+        datasource.match(/\%\{([\:a-z_]+)\}/)[1]
+      rescue NoMethodError
+        datasource
+      end
+    }
+  end
+
   # Return the scope but with the addition of fully qualified 
   #   variable keys for any level of the hierarchy that's formatted that way, e.g.:
   #       { 'datacenter' => 'pdx', '::datacenter' => 'pdx' } 
@@ -54,19 +64,11 @@ class HieraController
   # @return [Hash] 
   def top_scopify(args)
     scope = args[:scope]
-    fix_keys = hierarchy.map{|datasource|
-      begin
-        datasource.match(/\%\{([\:a-z_]+)\}/)[1]
-      rescue NoMethodError
-        datasource
-      end
-    }
-    fix_keys.select!{|datasource| datasource.start_with?("::")} unless fix_keys.empty?
+    fix_keys = hierarchy_variables.select{|datasource| datasource.start_with?("::")}
     scope.inject({}){|a,fact|
       a["::#{fact.first}"] = fact.last if fix_keys.include?("::#{fact.first}")
       a[fact.first] = fact.last
-      a
-    }
+      a }
   end
 
   # Basically shadows the Hiera#lookup method

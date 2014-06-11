@@ -12,7 +12,7 @@ use Rack::Session::Cookie, :secret => '4zENWx0ruhWU3ZN'
 class HieraBrowserUI < Sinatra::Application
   # api
   get '/api/v1/nodes' do
-    @nodes = YamlDir.new.list
+    @nodes = YamlDir.new.node_list
     JSON.generate(@nodes)
   end
 
@@ -35,7 +35,7 @@ class HieraBrowserUI < Sinatra::Application
 
   get '/nodes' do
     @title = "node list"
-    @nodes = YamlDir.new.list
+    @nodes = YamlDir.new.node_list
     slim :nodes
   end
 

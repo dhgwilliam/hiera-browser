@@ -1,54 +1,6 @@
 require 'yaml'
 require 'puppet'
 
-class YamlDir
-  @@node_dir = 
-    if ENV['YAML_DIR']
-      ENV['YAML_DIR']
-    elsif File.exist?('/var/opt/lib/pe-puppet/yaml')
-      '/var/opt/lib/pe-puppet/yaml/node'
-    else
-      '/var/lib/puppet/yaml/node'
-    end
-
-  def initialize(args = {})
-    @node_dir    = args[:node_dir] || @@node_dir
-  end
-
-  def path
-    @node_dir
-  end
-
-  def files
-    begin
-      Dir.chdir(@node_dir) { Dir.glob('**/*.yaml') }
-    rescue Errno::ENOENT => e
-      raise "Can't find your $yamldir: #{e}"
-    end
-  end
-
-  def list
-    files = self.files
-    files.map{|f| f.split('.yaml')}.flatten
-  end
-
-  def parameters
-    files = self.files
-    files.map{|f| YAML.load_file(File.join(@node_dir,f)).parameters}.
-      inject({}){|a,params|
-        params.each {|key, value| 
-          a[key] = [] unless a[key]
-          a[key] << value unless a[key].include? value
-        }
-        a 
-      }
-  end
-
-  def environments
-    self.parameters["environment"]
-  end
-end
-
 class Node
   attr_reader :certname, :facts, :node_dir
 
@@ -59,8 +11,10 @@ class Node
     @hiera       = args[:hiera] || HieraController.new
   end
 
-  def parameters(args = {})
-    facts_yaml
+  def parameters
+    collection = ParameterCollection.new
+    facts_yaml.each {|k,v|
+      collection << Parameter.new(:key => k, :value => v)}
   end
 
   def load_yaml
@@ -69,17 +23,17 @@ class Node
   end
 
   def facts_yaml
-    node = load_yaml
-    node.parameters.merge(node.facts.values)
+    yaml = load_yaml
+    yaml.parameters.merge(yaml.facts.values)
   end
 
-  def hiera_values(args={})
+  def hiera_values(args = {})
     additive_keys = args[:additive_keys] || []
     @hiera.get_all(:scope => @facts, :additive_keys => additive_keys).
       values.inject({}){|a,v| a.merge!(v)}
   end
 
-  def sorted_values(args)
+  def sorted_values(args = {})
     keys = args[:keys]
     hiera_values(:additive_keys => keys).sort_by{|k,v|k}
   end
@@ -88,4 +42,7 @@ class Node
     @facts['environment']
   end
 
+  def lookup(args)
+    @hiera.lookup(:key => args[:key], :scope => @facts)
+  end
 end

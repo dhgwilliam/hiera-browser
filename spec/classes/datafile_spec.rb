@@ -1,5 +1,8 @@
 require 'spec_helper'
 
+describe DataDir do
+end
+
 describe DataFile do
   context 'when created with a valid path to a hiera yaml datasource' do
     let(:datafile) { DataFile.new :path => File.join(
