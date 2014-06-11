@@ -1,7 +1,8 @@
 # hiera-browser
 
 [![Gem Version](https://badge.fury.io/rb/hiera-browser.svg)](http://badge.fury.io/rb/hiera-browser)
-[![Inline docs](http://inch-ci.org/github/dhgwilliam/hiera-browser.png?branch=test_and_document)](http://inch-ci.org/github/dhgwilliam/hiera-browser)
+[![Inline docs](http://inch-ci.org/github/dhgwilliam/hiera-browser.png?branch=master)](http://inch-ci.org/github/dhgwilliam/hiera-browser)
+[![Code Climate](https://codeclimate.com/github/dhgwilliam/hiera-browser.png)](https://codeclimate.com/github/dhgwilliam/hiera-browser)
 
 
 `hiera-browser` is a tool that simply makes an admin aware of what values a node can expect to retrieve from hiera.
