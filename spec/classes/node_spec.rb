@@ -18,7 +18,7 @@ describe Node do
 
     describe '#parameters' do
       it 'includes "datacenter" fact' do
-        expect(subject.parameters).to include('datacenter' => 'pdx')
+        expect(subject.parameters).to include(Parameter.new :key => 'datacenter', :value => 'pdx')
       end
     end
 

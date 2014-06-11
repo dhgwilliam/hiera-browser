@@ -66,7 +66,7 @@ class Parameter
   end
 
   def == (param)
-    if @key == param.key && @value == param.value
+    if param.class == Parameter && @key == param.key && @value == param.value
       true
     else
       false

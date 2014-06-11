@@ -15,6 +15,7 @@ class Node
     collection = ParameterCollection.new
     facts_yaml.each {|k,v|
       collection << Parameter.new(:key => k, :value => v)}
+    collection
   end
 
   def load_yaml
@@ -43,6 +44,6 @@ class Node
   end
 
   def lookup(args)
-    @hiera.lookup(:key => args[:key], :scope => @facts)
+    @hiera.lookup_additive(:key => args[:key], :scope => @facts)
   end
 end
