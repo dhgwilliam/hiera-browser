@@ -64,9 +64,9 @@ class HieraController
   # @return [Hash] 
   def top_scopify(args)
     scope = args[:scope]
-    fix_keys = hierarchy_variables.select{|datasource| datasource.start_with?("::")}
+    fix_keys = hierarchy_variables.select{|datasource| datasource.start_with?(Parameter.top_scope)}
     scope.inject({}){|a,fact|
-      a["::#{fact.first}"] = fact.last if fix_keys.include?("::#{fact.first}")
+      a[Parameter.top_scope(fact.first)] = fact.last if fix_keys.include?(Parameter.top_scope(fact.first))
       a[fact.first] = fact.last
       a }
   end

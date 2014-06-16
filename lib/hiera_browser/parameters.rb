@@ -35,7 +35,7 @@ class ParameterCollection
   def to_h
     self.keys.inject({}){|a, k| 
       a[k]        = self[k]
-      a["::#{k}"] = self[k]
+      a[Parameter.top_scope(k)] = self[k]
       a }
   end
 
@@ -62,7 +62,7 @@ class Parameter
   end
 
   def top_scope_key
-    "::#{@key}"
+    Parameter.top_scope(@key)
   end
 
   def == (param)
@@ -70,6 +70,12 @@ class Parameter
       true
     else
       false
+    end
+  end
+
+  class << self
+    def top_scope(key = '')
+      "::#{key}"
     end
   end
 
