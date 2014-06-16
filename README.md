@@ -7,6 +7,8 @@
 
 `hiera-browser` is a tool that simply makes an admin aware of what values a node can expect to retrieve from hiera.
 
+As of right now, `hiera-browser` only supports infrastructures with a single `yaml` backend.
+
 # installing
 
 For open source puppet:
