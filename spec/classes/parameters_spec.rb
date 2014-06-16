@@ -45,6 +45,10 @@ describe ParameterCollection do
     describe '#to_h' do
       it 'returns a Hash' do
         expect(subject.to_h).to be_a(Hash)
+        expect(subject.to_h).to eq({
+          'datacenter' => ['pdx', 'bvn'],
+          '::datacenter' => ['pdx', 'bvn'],
+        })
       end
     end
   end
