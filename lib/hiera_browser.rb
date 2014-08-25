@@ -1,4 +1,5 @@
 require 'hiera'
+require 'hiera_browser/mq'
 require 'hiera_browser/hiera_controller'
 require 'hiera_browser/data'
 require 'hiera_browser/node'

@@ -9,14 +9,20 @@ class HieraController
   # @param args [{:hiera_yaml => String}] path to `hiera.yaml`
   # @return [void]
   def initialize(args={})
-    @hiera_yaml =  args[:hiera_yaml] || ENV['HIERA_YAML']
-    @hiera      =  hiera(:config => @hiera_yaml)
+    @hiera_yaml = args[:hiera_yaml] || ENV['HIERA_YAML']
+    @hiera      = hiera
   end
 
   # @param args [Hash] arguments to pass to Hiera.new()
   # @return [Hiera]
   def hiera(args={})
-    @hiera || Hiera.new(args)
+    if @hiera
+      @hiera
+    else
+      config = YAML.load_file(@hiera_yaml)
+      config.merge!(:logger => 'flannel')
+      Hiera.new(:config => config)
+    end
   end
 
   # @return [Hash]
@@ -29,8 +35,8 @@ class HieraController
     config[:backends].map{|b| 
       path = config[b.to_sym][:datadir]
       DataDir.new(
-        :hiera       => self,
-        :path        => path,
+        :hiera => self,
+        :path  => path,
       )
     }
   end
@@ -91,12 +97,16 @@ class HieraController
   def get_all(args)
     scope = top_scopify(:scope => args[:scope])
     values = keys.inject({}){|a, k|
-      a.merge({k => lookup(:key => k, :scope => scope)}) }
+      v = lookup(:key => k, :scope => scope)
+      a.merge({k => v}) }
     if args[:additive_keys]
       additive_values = args[:additive_keys].inject({}){|a,k|
-        a.merge({k => lookup_additive(:key => k, :scope => scope)}) }
+        v = lookup_additive(:key => k, :scope => scope)
+        a.merge({k => v}) }
       values = values.delete_if {|k,v| additive_values.has_key?(k)}.merge!(additive_values)
     end
+    values.each {|k, v|
+      p "DEBUG: #{k} was found in #{$mq.pop(k).join(', ')}" }
     values
   end
 
