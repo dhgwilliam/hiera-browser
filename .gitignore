@@ -4,4 +4,4 @@
 *.gem
 .yardoc
 coverage
-
+queue.log
