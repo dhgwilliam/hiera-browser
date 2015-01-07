@@ -22,8 +22,8 @@ class HieraBrowserUI < Sinatra::Application
     JSON.generate(@values)
   end
 
-  post "/api/v1/node/:node" do |node|
-    keys = JSON.instance_eval(request['keys']) || []
+  get "/api/v1/node/:node/additive" do |node|
+    keys = Node.new(:certname => node).hiera_values.keys
     @values = Node.new(:certname => node).hiera_values(:additive_keys => keys)
     JSON.generate(@values)
   end
@@ -44,25 +44,5 @@ class HieraBrowserUI < Sinatra::Application
     keys = session[:keys] || []
     @values = Node.new(:certname => node).sorted_values(:keys => keys)
     slim :node
-  end
-
-  get '/add/additive/:key' do |key|
-    session[:keys] = session[:keys] || []
-    session[:keys] << key
-    redirect back
-  end
-
-  get '/remove/additive/:key' do |key|
-    session[:keys].reject!{|k| k == key}
-    redirect back
-  end
-
-  get '/debug/session' do
-    debug_hash = {
-      :keys => session[:keys],
-      :env => settings.environment,
-      :rack_env => ENV['RACK_ENV'],
-    }
-    JSON.generate(debug_hash)
   end
 end
