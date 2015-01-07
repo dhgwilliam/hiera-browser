@@ -6,7 +6,7 @@ class Node
   # @return [String] e.g., 'testnode.puppetlabs.com'
   attr_reader :certname
   # @return [Hash] e.g., { 'datacenter' => 'pdx', 'environment' => 'dev' }
-  attr_reader :facts
+  attr_accessor :facts
   # @return [YamlDir]
   attr_reader :node_dir
 

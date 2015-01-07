@@ -1,0 +1,27 @@
+<html>
+  <head>
+    <title>hiera-browser</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script type="text/javascript" src="js/jquery-2.1.3.min.js"></script>
+    <script type="text/javascript" src="js/api.js"></script>
+    <script type="text/javascript" src="js/prettyprint.js"></script>
+  </head>
+  <body>
+    <div class="bar">
+      <div id="node_list">
+        <ul>
+          <img src="images/loader.gif">
+        </ul>
+      </div>
+      <div id="options">
+        override fact value
+        <a onclick="add_override();">+</a><br>
+        <div id="overrides">
+        </div>
+        <br>
+        include additive values <input id="additive" type="checkbox">
+      </div>
+    </div>
+    <div id="wrapper"></div>
+  </body>
+</html>
