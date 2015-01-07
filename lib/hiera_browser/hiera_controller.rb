@@ -105,8 +105,8 @@ class HieraController
         a.merge({k => v}) }
       values = values.delete_if {|k,v| additive_values.has_key?(k)}.merge!(additive_values)
     end
-    values.each {|k, v|
-      p "DEBUG: #{k} was found in #{$mq.pop(k).join(', ')}" }
+    $mq.write
+    values.each {|k, v| p "DEBUG: #{k} was found in #{$mq.pop(k).join(', ')}" }
     values
   end
 

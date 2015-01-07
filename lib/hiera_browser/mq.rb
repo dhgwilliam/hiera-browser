@@ -19,12 +19,16 @@ class MQ
     @queue.delete(topic).uniq
   end
 
-  def dump
-    file = File.open('./queue.log', 'a')
-    @queue.each {|topic, messages|
-      messages.each {|msg|
-        file << "#{topic} found in #{msg}\n" } }
+  def write
+    file = File.open('./queue.log', 'w')
+    @queue.each do |topic, messages|
+      messages.each {|msg| file << "#{topic} found in #{msg}\n" } 
+    end
     file.close
+  end
+
+  def dump
+    write
     @queue = {}
   end
 end
