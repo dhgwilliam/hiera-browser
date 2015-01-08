@@ -24,13 +24,7 @@ describe Node do
 
     describe '#hiera_values' do
       it 'returns a Hash of keys and values' do
-        expect(subject.hiera_values).to be_a(Hash)
-        expect(subject.hiera_values).to eq({
-          "test_array"=>["array value 1 from pdx.yaml", "array value 2 from pdx.yaml", "array value 3 from pdx.yaml"],
-          "test_bool"=>false,
-          "test_hash"=>{"test_hash_key1"=>"test_hash_key1 value from pdx.yaml", "test_hash_key2"=>"test_hash_key2 value from pdx.yaml", "test_hash_key3"=>"test_hash_key3 value from pdx.yaml", "test_hash_merge_pdx"=>"test_hash_merge_key from pdx.yaml"},
-          "test_string"=>"test_string value from pdx.yaml"
-        })
+        expect(subject.hiera_values).to be_a(Array)
       end
     end
 

@@ -42,7 +42,7 @@ body {
   color: #f4cf56;
 }
 
-.fact, .value {
+.fact, .value, .origin {
   border: 0;
 }
 
@@ -67,7 +67,7 @@ body {
   overflow: scroll;
 }
 
-.key .value {
+.key .value, .origin {
   font-family: 'Arial';
   font-size: 12px;
   margin-bottom: 10px;

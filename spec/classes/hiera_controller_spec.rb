@@ -42,7 +42,7 @@ describe HieraController do
         expect(h).to eq(["hostname/%{::hostname}", "datacenter/%{::datacenter}", "common"])
       end
     end
-    
+
     describe '#top_scopify' do
       it 'fully qualifies keys when they are fully qualified in `hiera.yaml`' do
         s = hiera.top_scopify(:scope => {
@@ -77,6 +77,7 @@ describe HieraController do
           expect(lookup).to be_a(Hash)
           expect(lookup.values.first).to be_a(String)
           expect(lookup.values).to include('test_string value from pdx.yaml')
+          expect(lookup[:origin]).to include('datacenter/pdx')
         end
       end
 
@@ -87,7 +88,7 @@ describe HieraController do
           '::datacenter' => 'pdx',
         } }
         let(:resolution_type) { :hash }
-        let(:subject) { 
+        let(:subject) {
           hiera.lookup(:key             => key,
                        :scope           => scope,
                        :resolution_type => resolution_type)
@@ -96,13 +97,15 @@ describe HieraController do
         it 'retrieves a value from hiera using hash resolution type' do
           expect(subject).to be_a(Hash)
           expect(subject).to eq(
-            'test_hash' => {
+            :key => 'test_hash',
+            :value => {
               'test_hash_key1'         => "test_hash_key1 value from pdx.yaml",
               "test_hash_key2"         => "test_hash_key2 value from pdx.yaml",
               "test_hash_key3"         => "test_hash_key3 value from pdx.yaml",
               "test_hash_merge_common" => "test_hash_merge_key from common.yaml",
               "test_hash_merge_pdx"    => "test_hash_merge_key from pdx.yaml"
-            }
+            },
+            :origin => ['datacenter/pdx', 'common']
           )
         end
       end
@@ -113,13 +116,7 @@ describe HieraController do
         let(:subject) { hiera.get_all(:scope => scope) }
 
         it 'returns a hash of keys and values' do
-          expect(subject).to be_a(Hash)
-          expect(subject).to eq( {
-            "test_array"  =>  {"test_array"=>["array value 1 from pdx.yaml", "array value 2 from pdx.yaml", "array value 3 from pdx.yaml"]},
-            "test_bool"   =>  {"test_bool"=>false},
-            "test_hash"   =>  {"test_hash"=>{"test_hash_key1"=>"test_hash_key1 value from pdx.yaml", "test_hash_key2"=>"test_hash_key2 value from pdx.yaml", "test_hash_key3"=>"test_hash_key3 value from pdx.yaml", "test_hash_merge_pdx"=>"test_hash_merge_key from pdx.yaml"}},
-            "test_string" =>  {"test_string"=>"test_string value from pdx.yaml"}}
-          )
+          expect(subject).to be_a(Array)
         end
       end
 
@@ -128,13 +125,7 @@ describe HieraController do
         let(:subject) { hiera.get_all(:scope => scope, :additive_keys => additive_keys) }
 
         it 'returns a hash of keys and values' do
-          expect(subject).to be_a(Hash)
-          expect(subject).to eq({
-            "test_array"  =>  {"test_array"=>["array value 1 from pdx.yaml", "array value 2 from pdx.yaml", "array value 3 from pdx.yaml"]},
-            "test_bool"   =>  {"test_bool"=>false},
-            "test_string" =>  {"test_string"=>"test_string value from pdx.yaml"},
-            "test_hash"   =>  {"test_hash"=>{"test_hash_key1"=>"test_hash_key1 value from pdx.yaml", "test_hash_key2"=>"test_hash_key2 value from pdx.yaml", "test_hash_key3"=>"test_hash_key3 value from pdx.yaml", "test_hash_merge_common"=>"test_hash_merge_key from common.yaml", "test_hash_merge_pdx"=>"test_hash_merge_key from pdx.yaml"}}
-          })
+          expect(subject).to be_a(Array)
         end
       end
     end
@@ -145,9 +136,6 @@ describe HieraController do
 
         it 'determines the correct resolution type and returns all values for :key' do
           expect(subject).to be_a(Hash)
-          expect(subject).to eq(
-            "test_hash"=>{"test_hash_key1"=>"test_hash_key1 value from pdx.yaml", "test_hash_key2"=>"test_hash_key2 value from pdx.yaml", "test_hash_key3"=>"test_hash_key3 value from pdx.yaml", "test_hash_merge_common"=>"test_hash_merge_key from common.yaml", "test_hash_merge_pdx"=>"test_hash_merge_key from pdx.yaml"}
-          )
         end
       end
 
@@ -168,9 +156,6 @@ describe HieraController do
         it 'determines the correct resolution type and returns a single value for :key' do
           expect(subject).to be_a(Hash)
           expect(subject).to_not eq(hiera.lookup(:key => key, :scope => scope))
-          expect(subject).to eq(
-            {"test_array"=>["array value 1 from pdx.yaml", "array value 2 from pdx.yaml", "array value 3 from pdx.yaml", "array value 1 from common.yaml", "array value 2 from common.yaml", "array value 3 from common.yaml"]}
-          )
         end
       end
     end
