@@ -21,7 +21,7 @@ class HieraBrowserUI < Sinatra::Application
         node.facts[fact[1]['key']] = fact[1]['value']
       end
     end
-    @additive_keys = node.hiera_values.keys unless params[:additive] == 'false'
+    @additive_keys = node.hiera_values.map{|h|h[:key]} unless params[:additive] == 'false'
     @values = node.hiera_values(:additive_keys => @additive_keys).to_json
   end
 

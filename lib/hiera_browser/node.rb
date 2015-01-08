@@ -44,8 +44,7 @@ class Node
   #   for any keys included in :additive_keys
   def hiera_values(args = {})
     additive_keys = args[:additive_keys] || []
-    @hiera.get_all(:scope => @facts, :additive_keys => additive_keys).
-      values.inject({}){|a,v| a.merge!(v)}
+    @hiera.get_all(:scope => @facts, :additive_keys => additive_keys)
   end
 
   # @param args [{:keys => Array}]
@@ -53,7 +52,7 @@ class Node
   #   e.g. [['datacenter', 'pdx'], ['environment', 'dev']]
   def sorted_values(args = {})
     keys = args[:keys]
-    hiera_values(:additive_keys => keys).sort_by{|k,v|k}
+    hiera_values(:additive_keys => keys).sort_by{|h| h[:key]}
   end
 
   # @return [String]

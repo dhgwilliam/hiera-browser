@@ -13,7 +13,7 @@ class DataDir
   def render_paths(args)
     begin
       interpolated_variables = args[:path].match(/\%\{([a-z_\:]+)\}/).captures
-      collected_parameters = @node_dir.collected_parameters 
+      collected_parameters = @node_dir.collected_parameters
       # collected_parameters is a ParameterCollection
       # interpolated_variables might look like ['::environment']
       interpolated_variables.map{|v|

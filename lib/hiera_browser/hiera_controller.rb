@@ -32,7 +32,7 @@ class HieraController
 
   # @return [Array]
   def datadirs
-    config[:backends].map{|b| 
+    config[:backends].map{|b|
       path = config[b.to_sym][:datadir]
       DataDir.new(
         :hiera => self,
@@ -61,13 +61,13 @@ class HieraController
     }
   end
 
-  # Return the scope but with the addition of fully qualified 
+  # Return the scope but with the addition of fully qualified
   #   variable keys for any level of the hierarchy that's formatted that way, e.g.:
-  #       { 'datacenter' => 'pdx', '::datacenter' => 'pdx' } 
+  #       { 'datacenter' => 'pdx', '::datacenter' => 'pdx' }
   #
   # @note needs to be moved to Node
   # @param args [{:scope => Hash}]
-  # @return [Hash] 
+  # @return [Hash]
   def top_scopify(args)
     scope = args[:scope]
     fix_keys = hierarchy_variables.select{|datasource| datasource.start_with?(Parameter.top_scope)}
@@ -87,26 +87,32 @@ class HieraController
     key = args[:key]
     scope = top_scopify(:scope => args[:scope])
     resolution_type = args[:resolution_type] || :priority
-    Hash[*[key,hiera.lookup(key, nil, scope, nil, resolution_type)]]
+    {
+      :key    => key,
+      :value  => hiera.lookup(key, nil, scope, nil, resolution_type),
+      :origin => $mq.pop(key)
+    }
   end
 
   # Retrieve all node values for all known hiera keys
   #
   # @param args [{:scope => Hash}]
-  # @return [Hash]
+  # @return [Array]
   def get_all(args)
+    # top_scopify returns a Hash
     scope = top_scopify(:scope => args[:scope])
-    values = keys.inject({}){|a, k|
+    values = keys.inject([]){|a, k|
       v = lookup(:key => k, :scope => scope)
-      a.merge({k => v}) }
+      a << v ; a }
     if args[:additive_keys]
-      additive_values = args[:additive_keys].inject({}){|a,k|
+      additive_values = args[:additive_keys].inject([]){|a,k|
         v = lookup_additive(:key => k, :scope => scope)
-        a.merge({k => v}) }
-      values = values.delete_if {|k,v| additive_values.has_key?(k)}.merge!(additive_values)
+        a << v ; a }
+      additive_keys = additive_values.map{|h| h[:key]}
+      values = values.delete_if {|h| 
+        additive_keys.include?(h[:key])
+      }.concat(additive_values)
     end
-    $mq.write
-    values.each {|k, v| p "DEBUG: #{k} was found in #{$mq.pop(k).join(', ')}" }
     values
   end
 
@@ -119,8 +125,8 @@ class HieraController
     key = args[:key]
     scope = top_scopify(:scope => args[:scope])
     value = lookup(:key => key, :scope => scope)
-    lookup_type = 
-      case value.values.pop
+    lookup_type =
+      case value[:value]
       when Hash
         :hash
       when TrueClass, FalseClass
