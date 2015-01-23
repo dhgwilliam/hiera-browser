@@ -54,3 +54,7 @@ bundle install
 bundle exec rake demo
 ```
 
+# contributors
+
+- Jordan Olshevski: https://github.com/jolshevski
+    - frontend magic and style
