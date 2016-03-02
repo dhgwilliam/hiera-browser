@@ -9,6 +9,10 @@
 
 As of right now, `hiera-browser` only supports infrastructures with a single `yaml` backend.
 
+### WARNING
+
+What this tool does is it takes all your configuration data, including anything it can decrypt using `hiera-eyaml`, and exposes it. Please be careful about how you run this software in production.
+
 # installing
 
 For open source puppet:
